@@ -1,12 +1,37 @@
 <template>
   <div>
-    <md-table v-model="users" :table-header-color="tableHeaderColor">
-      <md-table-row slot="md-table-row" slot-scope="{ item }">
-        <md-table-cell md-label="ID">{{ item.id }}</md-table-cell>
-        <md-table-cell md-label="Name">{{ item.name }}</md-table-cell>
-        <md-table-cell md-label="Salary">{{ item.salary }}</md-table-cell>
-        <md-table-cell md-label="Country">{{ item.country }}</md-table-cell>
-        <md-table-cell md-label="City">{{ item.city }}</md-table-cell>
+    <md-table :table-header-color="tableHeaderColor">
+      <md-table-row>
+        <md-table-head>No</md-table-head>
+        <md-table-head>Name</md-table-head>
+        <md-table-head>Amount</md-table-head>
+        <md-table-head>Action</md-table-head>
+      </md-table-row>
+
+      <md-table-row
+        v-for="(person, index) in data"
+        :key="person.id"
+        slot="md-table-row"
+      >
+        <md-table-cell>{{ index + 1 }}</md-table-cell>
+        <md-table-cell v-if="person.type == 'Debtor'">{{
+          person.users.name
+        }}</md-table-cell>
+        <md-table-cell v-if="person.type == 'Payment'">{{
+          person.debtor.users.name
+        }}</md-table-cell>
+        <md-table-cell
+          >RM {{ parseFloat(person.total).toFixed(2) }}</md-table-cell
+        >
+        <md-table-cell v-if="person.type == 'Debtor'"
+          ><a :href="'#/transactions/' + person.id">Details</a></md-table-cell
+        >
+        <md-table-cell
+          v-if="person.type == 'Payment' && person.payment_proof != null"
+          ><a target="_blank" :href="person.payment_proof"
+            >Payment Receipt</a
+          ></md-table-cell
+        >
       </md-table-row>
     </md-table>
   </div>
@@ -14,46 +39,17 @@
 
 <script>
 export default {
-  name: "ordered-table",
+  name: "OrderedTable",
   props: {
     tableHeaderColor: {
       type: String,
       default: "",
     },
+    data: Array,
   },
   data() {
     return {
       selected: [],
-      users: [
-        {
-          id: 1,
-          name: "Dakota Rice",
-          salary: "$36,738",
-          country: "Niger",
-          city: "Oud-Turnhout",
-        },
-        {
-          id: 2,
-          name: "Minerva Hooper",
-          salary: "$23,738",
-          country: "Curaçao",
-          city: "Sinaai-Waas",
-        },
-        {
-          id: 3,
-          name: "Sage Rodriguez",
-          salary: "$56,142",
-          country: "Netherlands",
-          city: "Overland Park",
-        },
-        {
-          id: 4,
-          name: "Philip Chaney",
-          salary: "$38,735",
-          country: "Korea, South",
-          city: "Gloucester",
-        },
-      ],
     };
   },
 };
