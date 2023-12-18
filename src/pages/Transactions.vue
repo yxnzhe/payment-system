@@ -62,7 +62,11 @@ export default {
       } else {
         this.transactions = data;
         for (let i = 0; i < this.transactions.length; i++) {
-          this.subtotal += parseFloat(this.transactions[i].amount);
+          if (this.transactions[i].merchant != "Payment") {
+            this.subtotal += parseFloat(this.transactions[i].amount);
+          } else {
+            this.subtotal -= parseFloat(this.transactions[i].amount);
+          }
         }
         this.loading = false;
       }
