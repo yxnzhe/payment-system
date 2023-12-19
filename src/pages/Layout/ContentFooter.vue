@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <div class="container">
-      <nav>
+      <!-- <nav>
         <ul>
           <li>
             <a href="https://www.creative-tim.com">Creative Tim</a>
@@ -16,13 +16,8 @@
             <a href="https://www.creative-tim.com/license"> Licenses </a>
           </li>
         </ul>
-      </nav>
-      <div class="copyright text-center">
-        &copy; {{ new Date().getFullYear() }}
-        <a href="https://www.creative-tim.com/?ref=mdf-vuejs" target="_blank"
-          >Creative Tim</a
-        >, made with <i class="fa fa-heart heart"></i> for a better web
-      </div>
+      </nav> -->
+      <div class="copyright text-center">&copy; 2023 Philbert Heng</div>
     </div>
   </footer>
 </template>
