@@ -69,11 +69,7 @@
               <div class="md-layout-item">
                 <h4 class="title">Debtors Summary</h4>
               </div>
-              <div
-                class="md-layout-item"
-                style="text-align: right"
-                v-if="isAdmin == 'Philbert'"
-              >
+              <div class="md-layout-item" style="text-align: right">
                 <md-button
                   class="md-primary md-raised"
                   @click="showDebtorDialog = true"
@@ -194,7 +190,6 @@ export default {
   },
   data() {
     return {
-      isAdmin: this.$route.query.admin,
       lastUpdateTime: new Date().toLocaleString(),
       debtorCount: 0,
       totalReceivable: 0,
