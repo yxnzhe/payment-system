@@ -182,6 +182,7 @@
 <script>
 import { StatsCard, OrderedTable } from "@/components";
 import { supabase, storage } from "../../supabaseClient";
+import axios from "axios";
 
 export default {
   components: {
@@ -205,6 +206,8 @@ export default {
         document: null,
         type: "Transaction",
       },
+      apiKey:
+        "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",
     };
   },
   beforeMount() {
@@ -226,7 +229,7 @@ export default {
         .select("*, users(name)")
         .order("total", { ascending: false });
       if (error) {
-        console.log(error);
+        alert(error.message);
       } else {
         for (let i = 0; i < data.length; i++) {
           this.totalReceivable += data[i].total;
@@ -248,7 +251,7 @@ export default {
         .select("*, debtor(users(name))")
         .order("created_at", { ascending: false });
       if (error) {
-        console.log(error);
+        alert(error.message);
       } else {
         for (let i = 0; i < data.length; i++) {
           const appendedData = {
@@ -269,6 +272,9 @@ export default {
       ) {
         alert("Please fill in all the fields");
       } else {
+        if (this.debtorForm.type == "Payment") {
+          this.debtorForm.amount = this.debtorForm.amount * -1;
+        }
         const { data, error } = await supabase
           .from("transactions")
           .insert([
@@ -281,7 +287,7 @@ export default {
           ])
           .select();
         if (error) {
-          console.log(error);
+          alert(error.message);
         } else {
           this.updateTotalAmount(
             this.debtorForm.amount,
@@ -297,16 +303,8 @@ export default {
         .select("total")
         .eq("id", debtor_id);
 
-      if (debtorError) {
-        console.error(debtorError);
-        return;
-      }
-
       const currentTotal = Number(debtorData[0]?.total) || 0;
 
-      if (this.debtorForm.type == "Payment") {
-        subtotal = subtotal * -1;
-      }
       const newTotal = currentTotal + parseFloat(subtotal);
 
       const { data, error } = await supabase
@@ -316,9 +314,9 @@ export default {
         .select();
 
       if (error) {
-        console.error(error);
+        alert(error.message);
       } else {
-        if (this.debtorForm.type === "Payment" && this.debtorForm.document) {
+        if (this.debtorForm.type === "Payment") {
           if (this.debtorForm.document) {
             await this.uploadFile(
               this.debtorForm.document,
@@ -353,7 +351,7 @@ export default {
         });
 
       if (error) {
-        console.error(error);
+        alert(error.message);
       } else {
         const fileURL = supabase.storage
           .from("documents")
@@ -378,8 +376,9 @@ export default {
         ])
         .select();
       if (error) {
-        console.log(error);
+        alert(error.message);
       } else {
+        this.sendPaymentEmail(debtor_id, amount);
         this.$notify({
           message: "Transactions created successfully",
           type: "success",
@@ -397,6 +396,78 @@ export default {
       if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
         this.debtorForm.document = file;
+      }
+    },
+
+    async sendPaymentEmail(debtor_id, amount) {
+      const { data, error } = await supabase
+        .from("debtor")
+        .select("users(name, email)")
+        .eq("id", debtor_id);
+      if (error) {
+        alert(error.message);
+      } else {
+        const debtorInfo = data[0].users;
+
+        await axios({
+          method: "POST",
+          url: "https://api.sendinblue.com/v3/smtp/email",
+          headers: {
+            "api-key": this.apiKey,
+            "content-type": "application/json",
+          },
+          data: {
+            sender: {
+              name: "Yan Zhe",
+              email: "noreply@payment-system.com",
+            },
+            to: [
+              {
+                name: debtorInfo.name,
+                email: debtorInfo.email,
+              },
+            ],
+            bcc: [
+              {
+                name: "Yan Zhe",
+                email: "yanzhe2003@gmail.com",
+              },
+            ],
+            subject: "Payment Received from " + debtorInfo.name,
+            htmlContent: `
+              <!DOCTYPE html>
+              <html lang="en">
+
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Payment Received Email</title>
+              </head>
+
+              <body style="font-family: Arial, sans-serif;">
+
+                <p>Dear ${debtorInfo.name},</p>
+
+                <p>I hope this email finds you well. I am writing to inform you that we have successfully received your recent payment of <strong>RM ${parseFloat(
+                  amount * -1
+                ).toFixed(
+                  2
+                )}</strong>, dated ${new Date().toLocaleDateString()}. We greatly appreciate your prompt attention to settling your outstanding balance.</p>
+
+                <p>If you have any questions or concerns regarding the payment or if there is anything else we can assist you with, please do not hesitate to reach out to me on WhatsApp.</p>
+
+                <p>Thank you once again for your timely payment.</p>
+
+                <p>
+                  Best Regards, <br> Yan Zhe
+                </p>
+
+              </body>
+
+              </html>
+            `,
+          },
+        });
       }
     },
   },

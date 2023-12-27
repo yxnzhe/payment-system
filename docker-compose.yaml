@@ -1,0 +1,10 @@
+version: '3.10'
+services:
+  frontend:
+    container_name: payment-system-frontend
+    image: payment-system:latest
+    restart: unless-stopped
+    ports:
+      - 5000:8080
+    volumes:
+      - ./frontend:/app

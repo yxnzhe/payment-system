@@ -67,7 +67,7 @@ export default {
         .from("debtor")
         .select("*, users(name, email)");
       if (error) {
-        console.log(error);
+        alert(error.message);
       } else {
         this.debtorsList = data;
       }
@@ -79,9 +79,8 @@ export default {
         .insert([{ user_id: user_id, total: 0 }])
         .select();
       if (error) {
-        console.log(error);
+        alert(error.message);
       } else {
-        console.log("createDebtor " + data[0].id);
         this.initTransactions(data[0].id);
       }
     },
@@ -94,14 +93,13 @@ export default {
             debtor_id: debtor_id,
             amount: 0,
             merchant: "Setup Debtor",
-            transaction_date: new Date().toLocaleString(),
+            transaction_date: "2023-01-01",
           },
         ])
         .select();
       if (error) {
-        console.log(error);
+        alert(error.message);
       } else {
-        console.log("initTransactions " + data[0].id);
         this.$notify({
           message: "Debtor created successfully",
           type: "success",
@@ -123,7 +121,7 @@ export default {
           .insert([{ name: this.name, email: this.email }])
           .select();
         if (error) {
-          console.log(error);
+          alert(error.message);
         } else {
           this.createDebtor(data[0].id);
         }
