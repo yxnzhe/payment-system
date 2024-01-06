@@ -5,6 +5,7 @@
         <md-table-head>No</md-table-head>
         <md-table-head>Name</md-table-head>
         <md-table-head>Email</md-table-head>
+        <md-table-head>Is Verified</md-table-head>
       </md-table-row>
 
       <md-table-row
@@ -15,6 +16,12 @@
         <md-table-cell>{{ index + 1 }}</md-table-cell>
         <md-table-cell>{{ person.users.name }}</md-table-cell>
         <md-table-cell>{{ person.users.email }}</md-table-cell>
+        <md-table-cell>
+          <md-checkbox
+            class="md-primary"
+            v-model="person.users.verified"
+          ></md-checkbox>
+        </md-table-cell>
       </md-table-row>
     </md-table>
   </div>

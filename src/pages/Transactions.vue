@@ -7,7 +7,7 @@
         >
           <md-button @click="$router.go(-1)">Back</md-button>
           <md-button @click="sendEmail">Send Report</md-button>
-          <md-button v-if="subtotal == 0" @click="clearTransactions"
+          <md-button v-if="subtotal <= 0" @click="clearTransactions"
             >Clear Transactions</md-button
           >
           <md-card id="transaction-report" v-if="transactions.length > 0">
@@ -49,8 +49,8 @@ export default {
       loading: true,
       debtorId: this.$route.params.debtorId,
       debtorInfo: null,
-      apiKey:
-        "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",
+      apiKey: // TODO: Add API Key
+        "",
     };
   },
   components: {
@@ -66,7 +66,8 @@ export default {
         .select("*, debtor(users(name, email))")
         .eq("debtor_id", this.debtorId)
         .eq("active", true)
-        .order("transaction_date", { ascending: false });
+        .order("transaction_date", { ascending: false })
+        .order("created_at", { ascending: false });
       if (error) {
         alert(error.message);
       } else {
@@ -98,19 +99,13 @@ export default {
           },
           data: {
             sender: {
-              name: "Yan Zhe",
+              name: "", // TODO: Add Sender Name
               email: "noreply@payment-system.com",
             },
             to: [
               {
                 name: this.debtorInfo.name,
                 email: this.debtorInfo.email,
-              },
-            ],
-            bcc: [
-              {
-                name: "Yan Zhe",
-                email: "yanzhe2003@gmail.com",
               },
             ],
             subject: "Debtor Report - " + this.debtorInfo.name,
@@ -138,7 +133,7 @@ export default {
 
                   <p>
                     Best Regards, <br>
-                    Yan Zhe
+                    TODO: Add Sender Name
                   </p>
 
                 </body>
