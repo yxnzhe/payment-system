@@ -65,7 +65,7 @@ export default {
     async getDebtors() {
       const { data, error } = await supabase
         .from("debtor")
-        .select("*, users(name, email)");
+        .select("*, users(name, email, verified)");
       if (error) {
         alert(error.message);
       } else {

@@ -206,8 +206,8 @@ export default {
         document: null,
         type: "Transaction",
       },
-      apiKey:
-        "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",
+      apiKey: // TODO: Add API Key
+        "",
     };
   },
   beforeMount() {
@@ -418,19 +418,13 @@ export default {
           },
           data: {
             sender: {
-              name: "Yan Zhe",
+              name: "", // TODO: Add Sender Name
               email: "noreply@payment-system.com",
             },
             to: [
               {
                 name: debtorInfo.name,
                 email: debtorInfo.email,
-              },
-            ],
-            bcc: [
-              {
-                name: "Yan Zhe",
-                email: "yanzhe2003@gmail.com",
               },
             ],
             subject: "Payment Received from " + debtorInfo.name,
@@ -450,16 +444,16 @@ export default {
 
                 <p>I hope this email finds you well. I am writing to inform you that we have successfully received your recent payment of <strong>RM ${parseFloat(
                   amount * -1
-                ).toFixed(
-                  2
-                )}</strong>, dated ${new Date().toLocaleDateString()}. We greatly appreciate your prompt attention to settling your outstanding balance.</p>
+                ).toFixed(2)}</strong>, dated ${
+              this.debtorForm.transactionDate
+            }. We greatly appreciate your prompt attention to settling your outstanding balance.</p>
 
                 <p>If you have any questions or concerns regarding the payment or if there is anything else we can assist you with, please do not hesitate to reach out to me on WhatsApp.</p>
 
                 <p>Thank you once again for your timely payment.</p>
 
                 <p>
-                  Best Regards, <br> Yan Zhe
+                  Best Regards, <br> TODO: Add Sender Name
                 </p>
 
               </body>
