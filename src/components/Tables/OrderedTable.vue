@@ -20,8 +20,11 @@
         <md-table-cell v-if="person.type == 'Payment'">{{
           person.debtor.users.name
         }}</md-table-cell>
-        <md-table-cell
+        <md-table-cell v-if="person.type == 'Debtor'"
           >RM {{ parseFloat(person.total).toFixed(2) }}</md-table-cell
+        >
+        <md-table-cell v-if="person.type == 'Payment'"
+          >RM {{ parseFloat(person.total * -1).toFixed(2) }}</md-table-cell
         >
         <md-table-cell v-if="person.type == 'Debtor'"
           ><a :href="'#/transactions/' + person.id">Details</a></md-table-cell
